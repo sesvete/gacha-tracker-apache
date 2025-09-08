@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Gacha Tracker Firebase"
+rootProject.name = "Gacha Tracker Apache"
 include(":app")
