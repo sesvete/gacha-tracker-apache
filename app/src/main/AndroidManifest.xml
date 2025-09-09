@@ -9,9 +9,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/gacha_logo"
+        android:icon="@drawable/gacha_apache_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/gacha_logo_round"
+        android:roundIcon="@drawable/gacha_apache_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GachaFramework"
         tools:targetApi="31">
