@@ -22,11 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.sesvete.gachatrackerapache.R;
 import com.sesvete.gachatrackerapache.helper.CounterHelper;
-import com.sesvete.gachatrackerapache.helper.DatabaseHelper;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.model.CounterProgress;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
@@ -65,8 +62,6 @@ public class CounterFragment extends Fragment {
     private int softPity;
     private int wishValue;
     private String currencyType;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
     private String uid;
 
     private int counterNumber;
@@ -86,12 +81,8 @@ public class CounterFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_counter, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        // tu so bile spremenljivke o uporabniku
 
-        if (currentUser != null){
-            uid = currentUser.getUid();
-        }
 
         txtCounterProgressNumber = view.findViewById(R.id.txt_counter_progress_number);
         txtCounterHistoryNumber = view.findViewById(R.id.txt_counter_history_number);
@@ -114,7 +105,7 @@ public class CounterFragment extends Fragment {
         txtCounterHistoryFeaturedUnitDescription = view.findViewById(R.id.txt_counter_history_featured_unit_description);
         txtCounterProgressGuaranteedDescription = view.findViewById(R.id.txt_counter_progress_guaranteed_description);
 
-        DatabaseHelper databaseHelper = new DatabaseHelper();
+        //DatabaseHelper databaseHelper = new DatabaseHelper();
 
         //disable buttons
         disableButtons();
@@ -137,41 +128,14 @@ public class CounterFragment extends Fragment {
         currencyType = CounterHelper.adjustCurrencyString(getResources(), game);
 
         // this is the lunching fragment, so we check here whether the user and the database entry exist
-        databaseHelper.checkIfUserExists(uid, new DatabaseHelper.OnCheckExistingUser() {
-            @Override
-            public void onCreateNewUser(String uid) {
-                Log.d("Main Startup", "Created user");
-                // checks whether there are any pulled units
-                databaseHelper.checkPathExists(uid, game, bannerType, new DatabaseHelper.OnPathExistsCallback() {
-                    @Override
-                    public void onPathExists(boolean exists) {
-                        if (exists){
-                            // retrieve latest unit from history
-                            CounterHelper.retrieveNewestUnit(uid, game, bannerType, txtCounterHistoryNumber, txtCounterHistoryUnit, imgCounterHistoryFeaturedUnitStatus);
-                        }
-                    }
-                });
-                // sets the initial state of the counter
-                setInitialCounter(txtCounterProgressNumber, imgCounterProgressGuaranteedDescription, uid, game, bannerType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue, getResources(), txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
-            }
 
-            @Override
-            public void onRetrieveExistingData(String uid) {
-                Log.d("Main Startup", "User already exists");
-                // checks whether there are any pulled units
-                databaseHelper.checkPathExists(uid, game, bannerType, new DatabaseHelper.OnPathExistsCallback() {
-                    @Override
-                    public void onPathExists(boolean exists) {
-                        if (exists){
-                            // retrieve latest unit from history
-                            CounterHelper.retrieveNewestUnit(uid, game, bannerType, txtCounterHistoryNumber, txtCounterHistoryUnit, imgCounterHistoryFeaturedUnitStatus);
-                        }
-                    }
-                });
-                // sets the initial state of the counter
-                setInitialCounter(txtCounterProgressNumber, imgCounterProgressGuaranteedDescription, uid, game, bannerType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue, getResources(), txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
-            }
-        });
+        // pri apache veziji se ne bo rabilo preverit, če uporabnik že obstaja v podatkovni bazi, saj ni potrebna poseban NoSQL struktura
+        // preveri se samo, če je že kak pull z njegovim uid, game in banner in vpisal se bo najnovejši
+
+        // database retrieve newest unit
+        // TODO: poberi relevantne podatke iz podatkovne baze in pol nazaj enablja buttone
+        enableButtons();
+
 
         btnCounterPlusOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,18 +143,10 @@ public class CounterFragment extends Fragment {
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 1, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 1;
-                databaseHelper.updateCounter(uid, game, bannerType, counterNumber, guaranteed, new DatabaseHelper.OnCounterUpdateCallback() {
-                    @Override
-                    public void onCounterUpdated(boolean success) {
-                        if (success){
-                            Log.d("btnPlusOne", "updated successfully");
-                        } else {
-                            Log.d("btnPlusOne", "update failed");
-                            Toast.makeText(getContext(), "Failed adding +1", Toast.LENGTH_SHORT).show();
-                        }
-                        enableButtons();
-                    }
-                });
+                // TODO: update counter in database
+                // tudi enablaj buttone, ko to posodobiš
+                enableButtons();
+
             }
         });
         btnCounterPlusTen.setOnClickListener(new View.OnClickListener() {
@@ -199,18 +155,10 @@ public class CounterFragment extends Fragment {
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 10, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 10;
-                databaseHelper.updateCounter(uid, game, bannerType, counterNumber, guaranteed, new DatabaseHelper.OnCounterUpdateCallback() {
-                    @Override
-                    public void onCounterUpdated(boolean success) {
-                        if (success){
-                            Log.d("btnPlusTen", "updated successfully");
-                        } else {
-                            Log.d("btnPlusTen", "update failed");
-                            Toast.makeText(getContext(), "Failed adding +10", Toast.LENGTH_SHORT).show();
-                        }
-                        enableButtons();
-                    }
-                });
+                // TODO: update counter in database
+                // tudi enablaj buttone, ko to posodobiš
+                enableButtons();
+
             }
         });
         btnCounterPlusX.setOnClickListener(new View.OnClickListener() {
@@ -244,19 +192,10 @@ public class CounterFragment extends Fragment {
                                     disableButtons();
                                     CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = counterNumber + numCustomWishes;
-                                    databaseHelper.updateCounter(uid, game, bannerType, counterNumber, guaranteed, new DatabaseHelper.OnCounterUpdateCallback() {
-                                        @Override
-                                        public void onCounterUpdated(boolean success) {
-                                            if (success){
-                                                Log.d("btnPlusX", "updated successfully");
-                                            } else {
-                                                Log.d("btnPlusX", "update failed");
-                                                Toast.makeText(getContext(), "Failed adding custom number", Toast.LENGTH_SHORT).show();
-                                            }
-                                            enableButtons();
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                    // TODO: update counter in database
+                                    // tudi enablaj buttone, ko to posodobiš
+                                    enableButtons();
+                                    dialog.dismiss();
                                 }
                             } catch (Exception e) {
                                 Log.e("bntXConfirm", "An error occurred: " + e.getMessage(), e);
@@ -332,21 +271,16 @@ public class CounterFragment extends Fragment {
                                         imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_block_red);
                                     }
                                     PulledUnit pulledUnit = new PulledUnit(numOfPulls, inputString, wonFiftyFifty, formatedDate);
-                                    pulledUnit.writePulledUnitToDatabase(uid, game, bannerType);
+
+                                    // TODO: zapis enote v podatkovno bazo
+                                    //pulledUnit.writePulledUnitToDatabase(uid, game, bannerType);
+
                                     counterNumber = 0;
-                                    databaseHelper.updateCounter(uid, game, bannerType, counterNumber, guaranteed, new DatabaseHelper.OnCounterUpdateCallback() {
-                                        @Override
-                                        public void onCounterUpdated(boolean success) {
-                                            if (success){
-                                                Log.d("btnCounterConfirm", "updated successfully");
-                                            } else {
-                                                Log.d("btnCounterConfirm", "update failed");
-                                                Toast.makeText(getContext(), "Failed reseting counter", Toast.LENGTH_SHORT).show();
-                                            }
-                                            enableButtons();
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                    // TODO: update counter in database
+                                    // tu se counter resetira na 0
+                                    // tudi enablaj buttone, ko to posodobiš
+                                    enableButtons();
+                                    dialog.dismiss();
                                 }
                             }
                         });
@@ -421,19 +355,12 @@ public class CounterFragment extends Fragment {
                                     txtCounterProgressNumber.setText(String.valueOf(numCustomWishes));
                                     CounterHelper.updateSoftPityTracker(getResources(), numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = numCustomWishes;
-                                    databaseHelper.updateCounter(uid, game, bannerType, counterNumber, guaranteed, new DatabaseHelper.OnCounterUpdateCallback() {
-                                        @Override
-                                        public void onCounterUpdated(boolean success) {
-                                            if (success){
-                                                Log.d("btnPlusX", "updated successfully");
-                                            } else {
-                                                Log.d("btnPlusX", "update failed");
-                                                Toast.makeText(getContext(), "Failed adding custom number. Please try again later", Toast.LENGTH_SHORT).show();
-                                            }
-                                            enableButtons();
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                    // TODO: update counter in database
+                                    // tu je long click
+                                    // tudi enablaj buttone, ko to posodobiš
+                                    enableButtons();
+                                    dialog.dismiss();
+
                                 }
                             } catch (Exception e){
                                 Log.e("bntCounterProgress", "An error occurred: " + e.getMessage(), e);
@@ -477,6 +404,9 @@ public class CounterFragment extends Fragment {
     // mora se pobrati stanje trenutenga counterja
     // morajo se posodobiti tista polja
 
+    /*
+    // TODO: poberejo se začetni podatki iz podatkovne baze in se counter temu primerno posodobi
+
     private void setInitialCounter(TextView txtCounterProgressNumber, ImageView imgCounterProgressGuaranteedDescription, String uid, String game, String bannerType, TextView txtCounterSpentTillJackpot, TextView txtCounterSpentTillJackpotCurrency, TextView txtCounterSpentTillJackpotTotal, int softPity, int wishValue, Resources resources, TextView txtCounterSpentTillJackpotCurrencyDescription, TextView txtCounterSpentTillJackpotTotalDescription){
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.getCounterStatus(uid, game, bannerType, new DatabaseHelper.OnCounterReceivedCallback() {
@@ -499,6 +429,8 @@ public class CounterFragment extends Fragment {
             }
         });
     }
+
+     */
 
     private void disableButtons(){
         btnCounterConfirm.setEnabled(false);

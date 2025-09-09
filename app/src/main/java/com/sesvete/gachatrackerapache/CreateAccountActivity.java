@@ -10,14 +10,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.sesvete.gachatrackerapache.helper.AuthenticationHelper;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 
+//TODO: ob ustvaritvi računa se v podatkovno bazo zapiše uporabnik
+/*
+TODO: in sicer dva zapisa:
+        - tabela user - username in geslo
+        - tabela counter - uid, game name in banner type ter counter se postavi na 0 - to za vsako kombinacijo igra - banner
+ */
+
 public class CreateAccountActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
 
     private EditText editTextRegisterEmail;
     private EditText editTextRegisterPassword;
@@ -37,7 +41,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         DialogHelper.keyboardTouchListener(findViewById(R.id.main_register), this);
 
-        mAuth = FirebaseAuth.getInstance();
 
         editTextRegisterEmail = findViewById(R.id.edit_text_register_email);
         editTextRegisterPassword = findViewById(R.id.edit_text_register_password);
@@ -59,7 +62,14 @@ public class CreateAccountActivity extends AppCompatActivity {
                 } else if (password.length() <= 6) {
                     Toast.makeText(CreateAccountActivity.this, getString(R.string.short_password), Toast.LENGTH_SHORT).show();
                 } else {
-                    AuthenticationHelper.createUserWithEmailAndPassword(mAuth, CreateAccountActivity.this, getResources(), email, password);
+                    // TODO: create user - write to database and sing in
+
+                    // za zdaj samo preusmeri na main activity
+
+                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
                 }
 
             }

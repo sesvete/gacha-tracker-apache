@@ -159,6 +159,7 @@ public class CounterHelper {
         txtCounterSpentTillJackpotTotal.setText(String.valueOf(counterNumber * wishValue));
     }
 
+    /*
     public static void retrieveNewestUnit(String uid, String game, String banner, TextView txtCounterHistoryNumber, TextView txtCounterHistoryUnit, ShapeableImageView imgCounterHistoryFeaturedUnitStatus) {
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.retrieveNewestPulledUnit(uid, game, banner, new DatabaseHelper.OnRetrieveNewestUnitCallback() {
@@ -174,6 +175,8 @@ public class CounterHelper {
             }
         });
     }
+
+     */
 
     public static String dateFormatter(String inputDateString){
         try {

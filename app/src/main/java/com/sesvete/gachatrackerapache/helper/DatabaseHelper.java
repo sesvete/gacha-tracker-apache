@@ -1,3 +1,8 @@
+/*
+
+TODO: trenutno database helper deluje izklučno za Firebase podatkovno bazo
+naredi tak, da bo delal za naše relcaijsko podatkovno bazo
+
 package com.sesvete.gachatrackerapache.helper;
 
 import android.util.Log;
@@ -383,3 +388,5 @@ public class DatabaseHelper {
 
 
 }
+
+ */

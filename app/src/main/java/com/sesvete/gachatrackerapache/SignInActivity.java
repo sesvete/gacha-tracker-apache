@@ -1,3 +1,8 @@
+/*
+
+TODO: pri apache različici bo podprta samo prijava z epoštnim naslovom in geslom
+ta actiity se preskoči
+
 package com.sesvete.gachatrackerapache;
 
 import android.content.Context;
@@ -64,3 +69,5 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 }
+
+ */

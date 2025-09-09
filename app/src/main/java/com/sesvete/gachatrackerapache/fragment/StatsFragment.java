@@ -13,10 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.sesvete.gachatrackerapache.R;
-import com.sesvete.gachatrackerapache.helper.DatabaseHelper;
 import com.sesvete.gachatrackerapache.helper.StatsHelper;
 import com.sesvete.gachatrackerapache.helper.StatsRecViewAdapter;
 import com.sesvete.gachatrackerapache.model.Statistic;
@@ -31,10 +28,6 @@ public class StatsFragment extends Fragment {
     private MaterialButton btnStatsGlobal;
     private TextView txtStatsTitle;
     private RecyclerView recyclerViewStats;
-
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
-    private String uid;
 
     private String game;
     private String bannerType;
@@ -54,12 +47,8 @@ public class StatsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        // tu so bile spremenljivke o uporabniku
 
-        if (currentUser != null){
-            uid = currentUser.getUid();
-        }
 
         game = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("game", "genshin_impact");
         bannerType = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("banner", "limited");
@@ -75,21 +64,24 @@ public class StatsFragment extends Fragment {
 
         //initial Load Personal stats
         onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-        getPersonalStats(statisticList, uid, game, bannerType);
+        //TODO: funckija get personal stats
+        //getPersonalStats(statisticList, uid, game, bannerType);
 
         recyclerViewStats.setLayoutManager(new LinearLayoutManager(getContext()));
         btnStatsPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                getPersonalStats(statisticList, uid, game, bannerType);
+                //TODO: funckija get personal stats
+                //getPersonalStats(statisticList, uid, game, bannerType);
             }
         });
         btnStatsGlobal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onGlobalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                getGlobalStats(statisticList, game, bannerType);
+                //TODO: funckija get global stats
+                //getGlobalStats(statisticList, game, bannerType);
             }
         });
         return view;
@@ -106,6 +98,8 @@ public class StatsFragment extends Fragment {
         btnStatsGlobal.setEnabled(false);
     }
 
+    // TODO: imej te dve funckiji za zgled
+    /*
     private void getPersonalStats(ArrayList<Statistic> statisticList, String uid, String game, String bannerType){
         statisticList.clear();
         DatabaseHelper databaseHelper = new DatabaseHelper();
@@ -212,5 +206,7 @@ public class StatsFragment extends Fragment {
             }
         });
     }
+
+     */
 
 }

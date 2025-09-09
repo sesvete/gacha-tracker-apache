@@ -10,20 +10,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.sesvete.gachatrackerapache.helper.AuthenticationHelper;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 
 public class SignInWithPasswordActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
 
     private EditText editTextSignInPasswordEmail;
     private EditText editTextSignInPasswordPassword;
     private MaterialButton btnSignInPasswordSignIn;
     private MaterialButton btnSignInPasswordNewUser;
-    private MaterialButton btnSignInPasswordBack;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -37,13 +33,11 @@ public class SignInWithPasswordActivity extends AppCompatActivity {
 
         DialogHelper.keyboardTouchListener(findViewById(R.id.main_sign_in_with_password), this);
 
-        mAuth = FirebaseAuth.getInstance();
 
         editTextSignInPasswordEmail = findViewById(R.id.edit_text_sign_in_password_email);
         editTextSignInPasswordPassword = findViewById(R.id.edit_text_sign_in_password_password);
         btnSignInPasswordSignIn = findViewById(R.id.btn_sign_in_password_sign_in);
         btnSignInPasswordNewUser = findViewById(R.id.btn_sign_in_password_new_user);
-        btnSignInPasswordBack = findViewById(R.id.btn_sign_in_password_back);
 
         btnSignInPasswordSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +48,12 @@ public class SignInWithPasswordActivity extends AppCompatActivity {
                 if (email.isEmpty() || password.isEmpty()){
                     Toast.makeText(SignInWithPasswordActivity.this, getString(R.string.fill_all_forms), Toast.LENGTH_SHORT).show();
                 } else {
-                    AuthenticationHelper.signInWithEmailAndPassword(mAuth, SignInWithPasswordActivity.this, getResources(), email, password);
+                    // TODO: check if user exists and sign in user
+                    // za zdaj ta funkcija samo preusmeri na main activity
+
+                    Intent intent = new Intent(SignInWithPasswordActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
 
             }
@@ -69,13 +68,5 @@ public class SignInWithPasswordActivity extends AppCompatActivity {
             }
         });
 
-        btnSignInPasswordBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignInWithPasswordActivity.this, SignInActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 }

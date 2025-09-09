@@ -1,6 +1,7 @@
 package com.sesvete.gachatrackerapache;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,22 +15,26 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.credentials.CredentialManager;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.sesvete.gachatrackerapache.fragment.CounterFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.sesvete.gachatrackerapache.fragment.HistoryFragment;
 import com.sesvete.gachatrackerapache.fragment.SettingsFragment;
 import com.sesvete.gachatrackerapache.fragment.StatsFragment;
-import com.sesvete.gachatrackerapache.helper.AuthenticationHelper;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 import com.sesvete.gachatrackerapache.helper.SettingsHelper;
+
+/* TODO:
+    1.)odstrani firebase povezavo
+    2.)posodobi logotip
+    3.)postavi strežnik - apache
+    4.)povezava s strežnikom
+
+ */
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private FragmentManager fragmentManager;
-    private FirebaseAuth mAuth;
-    private CredentialManager credentialManager;
-    private FirebaseUser currentUser;
-    private String uid;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -52,10 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
-        credentialManager = CredentialManager.create(getBaseContext());
-        currentUser = mAuth.getCurrentUser();
-        uid = mAuth.getUid();
+        // tu so bile spremenljvke o uporabniku in njegovi seansi
 
         toolbar = findViewById(R.id.toolbar);
         if (savedInstanceState == null){
@@ -118,7 +116,10 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             // tu bo seveda najprej prišlo do odjave
                             dialog.dismiss();
-                            AuthenticationHelper.logOut(mAuth, credentialManager, MainActivity.this);
+                            // TODO: odjava iz računa
+                            Intent intent = new Intent(MainActivity.this, SignInWithPasswordActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
                     });
                 }
@@ -146,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
         if (navigationView != null) {
             View navHeaderView = navigationView.getHeaderView(0);
             TextView txtNavHeaderUserName = navHeaderView.findViewById(R.id.txt_nav_header_user_name);
-            // nav header user se bo pobral iz podatkovne baze
-            String userName = currentUser.getEmail();
+            // TODO: nav header user se bo pobral iz podatkovne baze
+            String userName = "TEST";
             txtNavHeaderUserName.setText(userName);
         }
     }

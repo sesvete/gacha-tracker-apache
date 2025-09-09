@@ -2,7 +2,6 @@ package com.sesvete.gachatrackerapache.model;
 
 import android.util.Log;
 
-import com.sesvete.gachatrackerapache.helper.DatabaseHelper;
 
 public class PulledUnit {
     private int numOfPulls;
@@ -64,6 +63,9 @@ public class PulledUnit {
     }
 
     // write to database
+    // TODO: funckija za zapis enote v podtkovno bazo
+
+    /*
     public void writePulledUnitToDatabase(String uid, String game, String banner){
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.savePulledUnit(uid, game, banner, getUnitName(), getNumOfPulls(), isFromBanner(), getDate(), new DatabaseHelper.OnSavePulledUnitCallback() {
@@ -77,4 +79,6 @@ public class PulledUnit {
             }
         });
     }
+
+     */
 }

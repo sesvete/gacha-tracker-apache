@@ -12,10 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.sesvete.gachatrackerapache.R;
-import com.sesvete.gachatrackerapache.helper.DatabaseHelper;
 import com.sesvete.gachatrackerapache.helper.HistoryRecViewAdapter;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
 
@@ -27,8 +25,6 @@ public class HistoryFragment extends Fragment {
     private RecyclerView recyclerViewHistory;
     private TextView txtHistoryBannerDescription;
     private String bannerType;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
     private String uid;
     private String game;
 
@@ -41,12 +37,8 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        // tu so bile spremenljivke o uporabniku
 
-        if (currentUser != null){
-            uid = currentUser.getUid();
-        }
         game = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("game", "genshin_impact");
         bannerType = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("banner", "limited");
 
@@ -59,6 +51,9 @@ public class HistoryFragment extends Fragment {
 
         HistoryRecViewAdapter adapter = new HistoryRecViewAdapter(getContext());
 
+        // TODO: poberemo enote iz podatkovne baze
+
+        /*
         DatabaseHelper databaseHelper = new DatabaseHelper();
         databaseHelper.retrievePullsHistory(uid, game, bannerType, new DatabaseHelper.OnRetrievePullsHistoryCallback() {
             @Override
@@ -66,6 +61,8 @@ public class HistoryFragment extends Fragment {
                 adapter.setPulledUnits(pulledUnitList);
             }
         });
+
+         */
 
         recyclerViewHistory.setAdapter(adapter);
         recyclerViewHistory.setLayoutManager(new LinearLayoutManager(getContext()));
