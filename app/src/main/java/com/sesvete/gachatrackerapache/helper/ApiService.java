@@ -13,4 +13,11 @@ public interface ApiService {
             @Field("username") String username,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @POST("login.php")
+    Call<ResponseBody> loginUser(
+            @Field("username") String username,
+            @Field("password") String password
+    );
 }

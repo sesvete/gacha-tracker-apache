@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.sesvete.gachatrackerapache.helper.AuthenticationHelperApache;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 
@@ -50,10 +51,14 @@ public class SignInWithPasswordActivity extends AppCompatActivity {
                 } else {
                     // TODO: check if user exists and sign in user
                     // za zdaj ta funkcija samo preusmeri na main activity
+                    AuthenticationHelperApache.loginUser(email, password, SignInWithPasswordActivity.this, getResources());
 
+                    /*
                     Intent intent = new Intent(SignInWithPasswordActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+
+                     */
                 }
 
             }
