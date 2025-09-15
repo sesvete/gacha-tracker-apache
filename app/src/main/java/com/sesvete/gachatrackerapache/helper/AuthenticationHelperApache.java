@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sesvete.gachatrackerapache.R;
+import com.sesvete.gachatrackerapache.model.ResponseError;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -31,7 +34,15 @@ public class AuthenticationHelperApache {
                 if (response.isSuccessful()){
                     Toast.makeText(activity, "Account created successfully!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(activity, "Account creation failed!", Toast.LENGTH_SHORT).show();
+                    // handle errors
+                    try {
+                        Gson gson = new GsonBuilder().create();
+                        ResponseError error = gson.fromJson(response.errorBody().string(), ResponseError.class);
+                        Toast.makeText(activity, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        Toast.makeText(activity, "An unexpected error occurred.", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
