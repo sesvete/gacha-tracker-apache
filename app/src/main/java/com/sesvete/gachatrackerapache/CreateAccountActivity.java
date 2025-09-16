@@ -67,7 +67,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                     // za zdaj samo preusmeri na main activity
 
-                    AuthenticationHelperApache.signupUser(email, password, CreateAccountActivity.this, getResources());
+                    AuthenticationHelperApache.signupUser(email, password, CreateAccountActivity.this, getResources(), getBaseContext());
 
                 }
 
