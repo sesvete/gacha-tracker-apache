@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sesvete.gachatrackerapache.MainActivity;
 import com.sesvete.gachatrackerapache.R;
+import com.sesvete.gachatrackerapache.SignInWithPasswordActivity;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
 import com.sesvete.gachatrackerapache.model.ResponseError;
 
@@ -105,7 +106,41 @@ public class AuthenticationHelperApache {
                 Toast.makeText(activity, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    public static void logoutUser(Resources resources, Activity activity){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(resources.getString(R.string.server_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.logoutUser();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                // Clear the local session data regardless of server response
+                clearLocalSession(activity);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Clear the local session data even on network failure
+                clearLocalSession(activity);
+            }
+        });
+    }
+
+    private static void clearLocalSession(Activity activity){
+        SharedPreferences sharedPref = activity.getSharedPreferences("GachaTrackerPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(activity, SignInWithPasswordActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.sesvete.gachatrackerapache;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +24,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.sesvete.gachatrackerapache.fragment.HistoryFragment;
 import com.sesvete.gachatrackerapache.fragment.SettingsFragment;
 import com.sesvete.gachatrackerapache.fragment.StatsFragment;
+import com.sesvete.gachatrackerapache.helper.AuthenticationHelperApache;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 import com.sesvete.gachatrackerapache.helper.SettingsHelper;
@@ -114,12 +115,8 @@ public class MainActivity extends AppCompatActivity {
                     btnLogoutConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // tu bo seveda najprej prišlo do odjave
                             dialog.dismiss();
-                            // TODO: odjava iz računa
-                            Intent intent = new Intent(MainActivity.this, SignInWithPasswordActivity.class);
-                            startActivity(intent);
-                            finish();
+                            AuthenticationHelperApache.logoutUser(getResources(), MainActivity.this);
                         }
                     });
                 }
@@ -147,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
         if (navigationView != null) {
             View navHeaderView = navigationView.getHeaderView(0);
             TextView txtNavHeaderUserName = navHeaderView.findViewById(R.id.txt_nav_header_user_name);
-            // TODO: nav header user se bo pobral iz podatkovne baze
-            String userName = "TEST";
+            SharedPreferences sharedPref = getSharedPreferences("GachaTrackerPrefs", getBaseContext().MODE_PRIVATE);
+            String userName = sharedPref.getString("username", null);
             txtNavHeaderUserName.setText(userName);
         }
     }

@@ -22,4 +22,7 @@ public interface ApiService {
             @Field("username") String username,
             @Field("password") String password
     );
+
+    @POST("logout.php")
+    Call<ResponseBody> logoutUser();
 }
