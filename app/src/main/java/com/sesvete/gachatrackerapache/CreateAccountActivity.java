@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.sesvete.gachatrackerapache.helper.AuthenticationHelperApache;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 
@@ -66,9 +67,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                     // za zdaj samo preusmeri na main activity
 
-                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    AuthenticationHelperApache.signupUser(email, password, CreateAccountActivity.this, getResources(), getBaseContext());
 
                 }
 

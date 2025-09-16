@@ -1,6 +1,7 @@
 package com.sesvete.gachatrackerapache;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,24 +18,24 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: preveri, če je uporabnik prijavljen v aplikacijo
-        // naj bo to token ali kar koli
-
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                /*
-                if (currentUser == null) {
-                    intent = new Intent(SplashActivity.this, SignInActivity.class);
-                } else {
-                    intent = new Intent(SplashActivity.this, MainActivity.class);
-                }
+                // Check for an existing, unexpired session
+                SharedPreferences sharedPref = getSharedPreferences("GachaTrackerPrefs", getBaseContext().MODE_PRIVATE);
+                String userId = sharedPref.getString("userId", null);
+                long expiresAt = sharedPref.getLong("expiresAt", 0);
 
-                 */
-                intent = new Intent(SplashActivity.this, SignInWithPasswordActivity.class);
-                startActivity(intent);
-                finish();
+                if (userId != null && System.currentTimeMillis() / 1000 < expiresAt) {
+                    // Session is valid, navigate to main activity
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    intent = new Intent(SplashActivity.this, SignInWithPasswordActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
