@@ -39,12 +39,11 @@ public class AuthenticationHelperApache {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()){
                     LoginResponse loginResponse = response.body();
-                    Toast.makeText(activity, "Account created successfully!", Toast.LENGTH_SHORT).show();
 
                     // Save session state to SharedPreferences
                     SharedPreferences sharedPref = activity.getSharedPreferences("GachaTrackerPrefs", context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("userId", loginResponse.getUid()); // Use the UID from the server response
+                    editor.putString("userId", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
                     editor.putLong("expiresAt", loginResponse.getExpires_at());
                     editor.apply();
@@ -74,7 +73,7 @@ public class AuthenticationHelperApache {
         });
     }
 
-    public static void loginUser(String email, String password, Activity activity, Resources resources){
+    public static void loginUser(String email, String password, Activity activity, Resources resources, Context context){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -82,12 +81,25 @@ public class AuthenticationHelperApache {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.loginUser(email, password);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<LoginResponse> call = apiService.loginUser(email, password);
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()){
-                    Toast.makeText(activity, "Login Successfully!", Toast.LENGTH_SHORT).show();
+                    LoginResponse loginResponse = response.body();
+
+                    // Save session state to SharedPreferences
+                    SharedPreferences sharedPref = activity.getSharedPreferences("GachaTrackerPrefs", context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("userId", loginResponse.getUid());
+                    editor.putString("username", loginResponse.getUsername());
+                    editor.putLong("expiresAt", loginResponse.getExpires_at());
+                    editor.apply();
+
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    activity.startActivity(intent);
+                    activity.finish();
+
                 } else {
                     // handle errors
                     try {
@@ -99,9 +111,10 @@ public class AuthenticationHelperApache {
                         Toast.makeText(activity, "An unexpected error occurred.", Toast.LENGTH_SHORT).show();
                     }
                 }
+
             }
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 // Handle network errors (e.g., no internet connection)
                 Toast.makeText(activity, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }

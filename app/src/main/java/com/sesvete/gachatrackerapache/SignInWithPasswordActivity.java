@@ -49,16 +49,7 @@ public class SignInWithPasswordActivity extends AppCompatActivity {
                 if (email.isEmpty() || password.isEmpty()){
                     Toast.makeText(SignInWithPasswordActivity.this, getString(R.string.fill_all_forms), Toast.LENGTH_SHORT).show();
                 } else {
-                    // TODO: check if user exists and sign in user
-                    // za zdaj ta funkcija samo preusmeri na main activity
-                    AuthenticationHelperApache.loginUser(email, password, SignInWithPasswordActivity.this, getResources());
-
-                    /*
-                    Intent intent = new Intent(SignInWithPasswordActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-
-                     */
+                    AuthenticationHelperApache.loginUser(email, password, SignInWithPasswordActivity.this, getResources(), getBaseContext());
                 }
 
             }
