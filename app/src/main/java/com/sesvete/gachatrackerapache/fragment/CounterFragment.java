@@ -1,5 +1,6 @@
 package com.sesvete.gachatrackerapache.fragment;
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.sesvete.gachatrackerapache.R;
 import com.sesvete.gachatrackerapache.helper.CounterHelper;
+import com.sesvete.gachatrackerapache.helper.DatabaseHelperMariaDB;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.model.CounterProgress;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
@@ -62,7 +64,8 @@ public class CounterFragment extends Fragment {
     private int softPity;
     private int wishValue;
     private String currencyType;
-    private String uid;
+    private String userId;
+    private int uid;
 
     private int counterNumber;
 
@@ -105,6 +108,10 @@ public class CounterFragment extends Fragment {
         txtCounterHistoryFeaturedUnitDescription = view.findViewById(R.id.txt_counter_history_featured_unit_description);
         txtCounterProgressGuaranteedDescription = view.findViewById(R.id.txt_counter_progress_guaranteed_description);
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("GachaTrackerPrefs", getContext().MODE_PRIVATE);
+        userId = sharedPreferences.getString("uid", null);
+        uid = Integer.parseInt(userId);
+
         //DatabaseHelper databaseHelper = new DatabaseHelper();
 
         //disable buttons
@@ -143,10 +150,7 @@ public class CounterFragment extends Fragment {
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 1, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 1;
-                // TODO: update counter in database
-                // tudi enablaj buttone, ko to posodobiš
-                enableButtons();
-
+                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
             }
         });
         btnCounterPlusTen.setOnClickListener(new View.OnClickListener() {
@@ -155,10 +159,7 @@ public class CounterFragment extends Fragment {
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 10, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 10;
-                // TODO: update counter in database
-                // tudi enablaj buttone, ko to posodobiš
-                enableButtons();
-
+                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
             }
         });
         btnCounterPlusX.setOnClickListener(new View.OnClickListener() {
@@ -192,9 +193,7 @@ public class CounterFragment extends Fragment {
                                     disableButtons();
                                     CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = counterNumber + numCustomWishes;
-                                    // TODO: update counter in database
-                                    // tudi enablaj buttone, ko to posodobiš
-                                    enableButtons();
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
                                     dialog.dismiss();
                                 }
                             } catch (Exception e) {
@@ -276,10 +275,7 @@ public class CounterFragment extends Fragment {
                                     //pulledUnit.writePulledUnitToDatabase(uid, game, bannerType);
 
                                     counterNumber = 0;
-                                    // TODO: update counter in database
-                                    // tu se counter resetira na 0
-                                    // tudi enablaj buttone, ko to posodobiš
-                                    enableButtons();
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
                                     dialog.dismiss();
                                 }
                             }
@@ -355,10 +351,7 @@ public class CounterFragment extends Fragment {
                                     txtCounterProgressNumber.setText(String.valueOf(numCustomWishes));
                                     CounterHelper.updateSoftPityTracker(getResources(), numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = numCustomWishes;
-                                    // TODO: update counter in database
-                                    // tu je long click
-                                    // tudi enablaj buttone, ko to posodobiš
-                                    enableButtons();
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
                                     dialog.dismiss();
 
                                 }

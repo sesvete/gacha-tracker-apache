@@ -25,4 +25,14 @@ public interface ApiService {
 
     @POST("logout.php")
     Call<ResponseBody> logoutUser();
+
+    @FormUrlEncoded
+    @POST("update_counter.php")
+    Call<ResponseBody> updateDatabaseCounter(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner,
+            @Field("progress") int progress,
+            @Field("guaranteed") int guaranteed
+    );
 }

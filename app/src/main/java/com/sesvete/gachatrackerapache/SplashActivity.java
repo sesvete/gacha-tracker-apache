@@ -23,10 +23,10 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 // Check for an existing, unexpired session
                 SharedPreferences sharedPref = getSharedPreferences("GachaTrackerPrefs", getBaseContext().MODE_PRIVATE);
-                String userId = sharedPref.getString("userId", null);
+                String uid = sharedPref.getString("uid", null);
                 long expiresAt = sharedPref.getLong("expiresAt", 0);
 
-                if (userId != null && System.currentTimeMillis() / 1000 < expiresAt) {
+                if (uid != null && System.currentTimeMillis() / 1000 < expiresAt) {
                     // Session is valid, navigate to main activity
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);

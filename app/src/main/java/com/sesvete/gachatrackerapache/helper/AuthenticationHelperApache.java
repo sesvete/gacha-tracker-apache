@@ -43,7 +43,7 @@ public class AuthenticationHelperApache {
                     // Save session state to SharedPreferences
                     SharedPreferences sharedPref = activity.getSharedPreferences("GachaTrackerPrefs", context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("userId", loginResponse.getUid());
+                    editor.putString("uid", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
                     editor.putLong("expiresAt", loginResponse.getExpires_at());
                     editor.apply();
@@ -91,7 +91,7 @@ public class AuthenticationHelperApache {
                     // Save session state to SharedPreferences
                     SharedPreferences sharedPref = activity.getSharedPreferences("GachaTrackerPrefs", context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("userId", loginResponse.getUid());
+                    editor.putString("uid", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
                     editor.putLong("expiresAt", loginResponse.getExpires_at());
                     editor.apply();
