@@ -1,5 +1,6 @@
 package com.sesvete.gachatrackerapache.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -23,16 +24,26 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sesvete.gachatrackerapache.R;
+import com.sesvete.gachatrackerapache.helper.ApiService;
 import com.sesvete.gachatrackerapache.helper.CounterHelper;
 import com.sesvete.gachatrackerapache.helper.DatabaseHelperMariaDB;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.model.CounterProgress;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
+import com.sesvete.gachatrackerapache.model.ResponseError;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CounterFragment extends Fragment {
@@ -141,8 +152,13 @@ public class CounterFragment extends Fragment {
 
         // database retrieve newest unit
         // TODO: poberi relevantne podatke iz podatkovne baze in pol nazaj enablja buttone
-        enableButtons();
 
+        //TODO: tle bo set inital counter
+        // TODO: retrieve newest unit
+
+        // retrieves counter data from database
+        // naredi še prej funkcijo, ki preveri, če ima že kakšno enoto v db in poberer najnovejšo - pol šele neablaš buttone
+        getDatabaseCounterData(getContext(), getResources(), uid, game, bannerType, txtCounterProgressNumber, imgCounterProgressGuaranteedDescription, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
 
         btnCounterPlusOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -397,33 +413,58 @@ public class CounterFragment extends Fragment {
     // mora se pobrati stanje trenutenga counterja
     // morajo se posodobiti tista polja
 
-    /*
-    // TODO: poberejo se začetni podatki iz podatkovne baze in se counter temu primerno posodobi
 
-    private void setInitialCounter(TextView txtCounterProgressNumber, ImageView imgCounterProgressGuaranteedDescription, String uid, String game, String bannerType, TextView txtCounterSpentTillJackpot, TextView txtCounterSpentTillJackpotCurrency, TextView txtCounterSpentTillJackpotTotal, int softPity, int wishValue, Resources resources, TextView txtCounterSpentTillJackpotCurrencyDescription, TextView txtCounterSpentTillJackpotTotalDescription){
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.getCounterStatus(uid, game, bannerType, new DatabaseHelper.OnCounterReceivedCallback() {
+    private void getDatabaseCounterData(Context context, Resources resources, int uid, String game, String banner, TextView txtCounterProgressNumber, ImageView imgCounterProgressGuaranteedDescription, TextView txtCounterSpentTillJackpot, TextView txtCounterSpentTillJackpotCurrency, TextView txtCounterSpentTillJackpotTotal, int softPity, int wishValue, TextView txtCounterSpentTillJackpotCurrencyDescription, TextView txtCounterSpentTillJackpotTotalDescription) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(resources.getString(R.string.server_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<CounterProgress> call = apiService.getDatabaseCounterData(uid, game, banner);
+
+        call.enqueue(new Callback<CounterProgress>() {
             @Override
-            public void onCounterReceived(CounterProgress counterProgress) {
-                counterNumber = counterProgress.getNumber();
-                txtCounterProgressNumber.setText(String.valueOf(counterNumber));
-                if (counterProgress.isGuaranteed()){
-                    guaranteed = true;
-                    imgCounterProgressGuaranteedDescription.setImageResource(R.drawable.ic_checkmark_green);
+            public void onResponse(Call<CounterProgress> call, Response<CounterProgress> response) {
+                if (response.isSuccessful()){
+                    // update polja in enablaj buttone
+                    CounterProgress counterProgress = response.body();
+                    int counterNumber = counterProgress.getProgress();
+                    int databaseGuaranteed = counterProgress.getGuaranteed();
+                    txtCounterProgressNumber.setText(String.valueOf(counterNumber));
+
+                    if (databaseGuaranteed == 1) {
+                        guaranteed = true;
+                        imgCounterProgressGuaranteedDescription.setImageResource(R.drawable.ic_checkmark_green);
+                    } else {
+                        guaranteed = false;
+                        imgCounterProgressGuaranteedDescription.setImageResource(R.drawable.ic_block_red);
+                    }
+                    CounterHelper.initialPityTrackerSetup(counterNumber, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue);
+                    CounterHelper.initialTextviewAdjust(resources, game, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
+                    //enable buttons once the values are set
+                    enableButtons();
+
+                } else {
+                    // handle errors
+                    try {
+                        Gson gson = new GsonBuilder().create();
+                        ResponseError error = gson.fromJson(response.errorBody().string(), ResponseError.class);
+                        Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        Toast.makeText(context, "An unexpected error occurred.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else {
-                    guaranteed = false;
-                    imgCounterProgressGuaranteedDescription.setImageResource(R.drawable.ic_block_red);
-                }
-                CounterHelper.initialPityTrackerSetup(counterNumber, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue);
-                CounterHelper.initialTextviewAdjust(resources, game, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
-                //enable buttons once the values are set
-                enableButtons();
+
+            }
+
+            @Override
+            public void onFailure(Call<CounterProgress> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-     */
 
     private void disableButtons(){
         btnCounterConfirm.setEnabled(false);

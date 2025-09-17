@@ -1,5 +1,6 @@
 package com.sesvete.gachatrackerapache.helper;
 
+import com.sesvete.gachatrackerapache.model.CounterProgress;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
 
 import okhttp3.ResponseBody;
@@ -35,4 +36,13 @@ public interface ApiService {
             @Field("progress") int progress,
             @Field("guaranteed") int guaranteed
     );
+
+    @FormUrlEncoded
+    @POST("get_counter_data.php")
+    Call<CounterProgress> getDatabaseCounterData(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner
+    );
+
 }
