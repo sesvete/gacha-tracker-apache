@@ -48,7 +48,7 @@ public class HistoryRecViewAdapter extends RecyclerView.Adapter<HistoryRecViewAd
         String bannerType = PreferenceManager.getDefaultSharedPreferences(context).getString("banner", "limited");
         if (bannerType.equals("standard") || bannerType.equals("bangboo")){
             holder.imgHistoryBannerName.setVisibility(View.GONE);
-        } else if (pulledUnits.get(position).isFromBanner()) {
+        } else if (pulledUnits.get(position).getFromBanner() == 1) {
             holder.imgHistoryBannerName.setImageResource(R.drawable.ic_checkmark_green);
         } else {
             holder.imgHistoryBannerName.setImageResource(R.drawable.ic_block_red);

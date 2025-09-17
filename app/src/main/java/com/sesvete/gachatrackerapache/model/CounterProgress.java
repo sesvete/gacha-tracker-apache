@@ -1,39 +1,31 @@
 package com.sesvete.gachatrackerapache.model;
 
 public class CounterProgress {
-    private int number;
-    private boolean guaranteed;
+    private int progress;
+    private int guaranteed;
 
     public CounterProgress() {
         // required empty constructor
     }
 
-    public CounterProgress(int number, boolean guaranteed) {
-        this.number = number;
+    public CounterProgress(int progress, int guaranteed) {
+        this.progress = progress;
         this.guaranteed = guaranteed;
     }
 
-    public int getNumber() {
-        return number;
+    public int getProgress() {
+        return progress;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
-    public boolean isGuaranteed() {
+    public int getGuaranteed() {
         return guaranteed;
     }
 
-    public void setGuaranteed(boolean guaranteed) {
+    public void setGuaranteed(int guaranteed) {
         this.guaranteed = guaranteed;
-    }
-
-    @Override
-    public String toString() {
-        return "CounterProgress{" +
-                "number=" + number +
-                ", guaranteed=" + guaranteed +
-                '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.sesvete.gachatrackerapache.helper;
 
+import com.sesvete.gachatrackerapache.model.CounterInitialization;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
 
 import okhttp3.ResponseBody;
@@ -25,4 +26,36 @@ public interface ApiService {
 
     @POST("logout.php")
     Call<ResponseBody> logoutUser();
+
+    @FormUrlEncoded
+    @POST("update_counter.php")
+    Call<ResponseBody> updateDatabaseCounter(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner,
+            @Field("progress") int progress,
+            @Field("guaranteed") int guaranteed
+    );
+
+    @FormUrlEncoded
+    @POST("get_counter_data.php")
+    Call<CounterInitialization> getDatabaseCounterData(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner
+    );
+
+    @FormUrlEncoded
+    @POST("insert_pulled_unit.php")
+    Call<ResponseBody> insertPulledUnitToDatabase(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner,
+            @Field("unit_name") String unitName,
+            @Field("num_of_pulls") int numOfPulls,
+            @Field("from_banner") int fromBanner,
+            @Field("date") String date
+
+    );
+
 }
