@@ -63,14 +63,14 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    private static void enableButtons(Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen){
+    public static void enableButtons(Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen){
         btnCounterConfirm.setEnabled(true);
         btnCounterPlusOne.setEnabled(true);
         btnCounterPlusX.setEnabled(true);
         btnCounterPlusTen.setEnabled(true);
     }
 
-    private static void disableButtons(Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen){
+    public static void disableButtons(Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen){
         btnCounterConfirm.setEnabled(false);
         btnCounterPlusOne.setEnabled(false);
         btnCounterPlusX.setEnabled(false);

@@ -84,6 +84,7 @@ public class CounterFragment extends Fragment {
     private boolean guaranteed;
     private boolean radioButtonChoice;
     private boolean wonFiftyFifty;
+    private int wonFiftyFiftyDatabase;
 
     public CounterFragment() {
         // Required empty public constructor
@@ -277,19 +278,18 @@ public class CounterFragment extends Fragment {
                                     if (radioButtonChoice){
                                         guaranteed = false;
                                         wonFiftyFifty = true;
+                                        wonFiftyFiftyDatabase = 1;
                                         imgCounterProgressGuaranteedDescription.setImageResource(R.drawable.ic_block_red);
                                         imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_checkmark_green);
                                     } else {
                                         guaranteed = true;
                                         wonFiftyFifty = false;
+                                        wonFiftyFiftyDatabase = 0;
                                         imgCounterProgressGuaranteedDescription.setImageResource(R.drawable.ic_checkmark_green);
                                         imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_block_red);
                                     }
-                                    PulledUnit pulledUnit = new PulledUnit(numOfPulls, inputString, wonFiftyFifty, formatedDate);
-
-                                    // TODO: zapis enote v podatkovno bazo
-                                    //pulledUnit.writePulledUnitToDatabase(uid, game, bannerType);
-
+                                    PulledUnit pulledUnit = new PulledUnit(numOfPulls, inputString, wonFiftyFiftyDatabase, formatedDate);
+                                    pulledUnit.writePulledUnitToDatabase(getContext(), getResources(), uid, game, bannerType);
                                     counterNumber = 0;
                                     DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
                                     dialog.dismiss();
@@ -429,7 +429,7 @@ public class CounterFragment extends Fragment {
                 if (response.isSuccessful()){
                     // update polja in enablaj buttone
                     CounterProgress counterProgress = response.body();
-                    int counterNumber = counterProgress.getProgress();
+                    counterNumber = counterProgress.getProgress();
                     int databaseGuaranteed = counterProgress.getGuaranteed();
                     txtCounterProgressNumber.setText(String.valueOf(counterNumber));
 

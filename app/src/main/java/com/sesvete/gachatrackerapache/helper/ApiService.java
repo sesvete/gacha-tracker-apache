@@ -45,4 +45,17 @@ public interface ApiService {
             @Field("banner") String banner
     );
 
+    @FormUrlEncoded
+    @POST("insert_pulled_unit.php")
+    Call<ResponseBody> insertPulledUnitToDatabase(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner,
+            @Field("unit_name") String unitName,
+            @Field("num_of_pulls") int numOfPulls,
+            @Field("from_banner") int fromBanner,
+            @Field("date") String date
+
+    );
+
 }
