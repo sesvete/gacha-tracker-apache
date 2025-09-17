@@ -31,7 +31,7 @@ import com.sesvete.gachatrackerapache.helper.ApiService;
 import com.sesvete.gachatrackerapache.helper.CounterHelper;
 import com.sesvete.gachatrackerapache.helper.DatabaseHelperMariaDB;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
-import com.sesvete.gachatrackerapache.model.CounterProgress;
+import com.sesvete.gachatrackerapache.model.CounterInitialization;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
 import com.sesvete.gachatrackerapache.model.ResponseError;
 
@@ -421,16 +421,16 @@ public class CounterFragment extends Fragment {
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<CounterProgress> call = apiService.getDatabaseCounterData(uid, game, banner);
+        Call<CounterInitialization> call = apiService.getDatabaseCounterData(uid, game, banner);
 
-        call.enqueue(new Callback<CounterProgress>() {
+        call.enqueue(new Callback<CounterInitialization>() {
             @Override
-            public void onResponse(Call<CounterProgress> call, Response<CounterProgress> response) {
+            public void onResponse(Call<CounterInitialization> call, Response<CounterInitialization> response) {
                 if (response.isSuccessful()){
                     // update polja in enablaj buttone
-                    CounterProgress counterProgress = response.body();
-                    counterNumber = counterProgress.getProgress();
-                    int databaseGuaranteed = counterProgress.getGuaranteed();
+                    CounterInitialization counterInitialization = response.body();
+                    counterNumber = counterInitialization.getProgress();
+                    int databaseGuaranteed = counterInitialization.getGuaranteed();
                     txtCounterProgressNumber.setText(String.valueOf(counterNumber));
 
                     if (databaseGuaranteed == 1) {
@@ -442,7 +442,16 @@ public class CounterFragment extends Fragment {
                     }
                     CounterHelper.initialPityTrackerSetup(counterNumber, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue);
                     CounterHelper.initialTextviewAdjust(resources, game, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
-                    //enable buttons once the values are set
+
+                    if(!(counterInitialization.getUnitName() == null || counterInitialization.getNumOfPulls() == null || counterInitialization.getFromBanner() == null)){
+                        txtCounterHistoryNumber.setText(String.valueOf(counterInitialization.getNumOfPulls()));
+                        txtCounterHistoryUnit.setText(counterInitialization.getUnitName());
+                        if (counterInitialization.getFromBanner().equals("1")){
+                            imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_checkmark_green);
+                        } else {
+                            imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_block_red);
+                        }
+                    }
                     enableButtons();
 
                 } else {
@@ -460,7 +469,7 @@ public class CounterFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<CounterProgress> call, Throwable t) {
+            public void onFailure(Call<CounterInitialization> call, Throwable t) {
                 Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
