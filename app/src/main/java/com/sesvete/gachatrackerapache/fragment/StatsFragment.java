@@ -1,5 +1,6 @@
 package com.sesvete.gachatrackerapache.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +15,9 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 import com.sesvete.gachatrackerapache.R;
-import com.sesvete.gachatrackerapache.helper.StatsHelper;
+import com.sesvete.gachatrackerapache.helper.DatabaseHelperMariaDB;
 import com.sesvete.gachatrackerapache.helper.StatsRecViewAdapter;
 import com.sesvete.gachatrackerapache.model.Statistic;
-import com.sesvete.gachatrackerapache.model.UserStats;
 
 import java.util.ArrayList;
 
@@ -28,6 +28,8 @@ public class StatsFragment extends Fragment {
     private MaterialButton btnStatsGlobal;
     private TextView txtStatsTitle;
     private RecyclerView recyclerViewStats;
+    private String userId;
+    private int uid;
 
     private String game;
     private String bannerType;
@@ -47,7 +49,9 @@ public class StatsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
 
-        // tu so bile spremenljivke o uporabniku
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("GachaTrackerPrefs", getContext().MODE_PRIVATE);
+        userId = sharedPreferences.getString("uid", null);
+        uid = Integer.parseInt(userId);
 
 
         game = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("game", "genshin_impact");
@@ -64,16 +68,14 @@ public class StatsFragment extends Fragment {
 
         //initial Load Personal stats
         onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-        //TODO: funckija get personal stats
-        //getPersonalStats(statisticList, uid, game, bannerType);
+        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter);
 
         recyclerViewStats.setLayoutManager(new LinearLayoutManager(getContext()));
         btnStatsPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                //TODO: funckija get personal stats
-                //getPersonalStats(statisticList, uid, game, bannerType);
+                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter);
             }
         });
         btnStatsGlobal.setOnClickListener(new View.OnClickListener() {
@@ -100,45 +102,6 @@ public class StatsFragment extends Fragment {
 
     // TODO: imej te dve funckiji za zgled
     /*
-    private void getPersonalStats(ArrayList<Statistic> statisticList, String uid, String game, String bannerType){
-        statisticList.clear();
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-
-        databaseHelper.retrievePersonalStats(uid, game, bannerType, new DatabaseHelper.OnRetrievePersonalStatsCallback() {
-            @Override
-            public void onPersonalStatsRetrieved(ArrayList<Integer> numOfPullsList, ArrayList<Boolean> fiftyFiftyOutcomes) {
-                // for number of pulled five stars het length of pullsForFiveStar
-                int numOfFiveStars = numOfPullsList.size();
-                if (!bannerType.equals("standard") && !bannerType.equals("bangboo")){
-                    int intNumWonFiftyFifty = StatsHelper.numWonFiftyFifty(fiftyFiftyOutcomes);
-                    int intNumLostFiftyFifty = StatsHelper.numLostFiftyFifty(fiftyFiftyOutcomes);
-                    double doublePercentageFiftyFifty = StatsHelper.percentageFiftyFifty(intNumWonFiftyFifty, intNumLostFiftyFifty);
-
-                    statisticList.add(new Statistic(getString(R.string.percentage_fifty_fifty), doublePercentageFiftyFifty));
-                    statisticList.add(new Statistic(getString(R.string.total_won_fifty_fifty), intNumWonFiftyFifty));
-                    statisticList.add(new Statistic(getString(R.string.total_lost_fifty_fifty), intNumLostFiftyFifty));
-                }
-                double doubleAvgNumPulls = StatsHelper.avgNumPulls(numOfPullsList);
-                int intTotalNumPulls = StatsHelper.totalNumPulls(numOfPullsList);
-                int currencyValue;
-
-                if (game.equals("tribe_nine")){
-                    currencyValue = 120;
-                }
-                else {
-                    currencyValue = 160;
-                }
-                statisticList.add(new Statistic(getString(R.string.avg_for_five_star), doubleAvgNumPulls));
-                statisticList.add(new Statistic(getString(R.string.total_five_stars), numOfFiveStars));
-                statisticList.add(new Statistic(getString(R.string.total_num_pulls), intTotalNumPulls));
-                statisticList.add(new Statistic(getString(R.string.avg_currency_five_star), Math.round((doubleAvgNumPulls * currencyValue) * 100.0) / 100.0));
-                statisticList.add(new Statistic(getString(R.string.total_currency_five_star), intTotalNumPulls * currencyValue));
-
-                adapter.setStatisticList(statisticList);
-            }
-        });
-    }
-
     private void getGlobalStats(ArrayList<Statistic> statisticList, String game, String bannerType){
         statisticList.clear();
         DatabaseHelper databaseHelper = new DatabaseHelper();
