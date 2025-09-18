@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.sesvete.gachatrackerapache.R;
 import com.sesvete.gachatrackerapache.helper.ApiService;
 
@@ -19,8 +20,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PulledUnit {
+    @SerializedName("num_of_pulls")
     private int numOfPulls;
+    @SerializedName("unit_name")
     private String unitName;
+    @SerializedName("from_banner")
     private int fromBanner;
     private String date;
 
@@ -66,26 +70,6 @@ public class PulledUnit {
     public void setDate(String date) {
         this.date = date;
     }
-
-    // write to database
-    // TODO: funckija za zapis enote v podtkovno bazo
-
-    /*
-    public void writePulledUnitToDatabase(String uid, String game, String banner){
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.savePulledUnit(uid, game, banner, getUnitName(), getNumOfPulls(), isFromBanner(), getDate(), new DatabaseHelper.OnSavePulledUnitCallback() {
-            @Override
-            public void onSavedPulledUnit(boolean success) {
-                if (success){
-                    Log.d("Pulled unit Writing", "Successfully wrote to Database");
-                } else {
-                    Log.d("Pulled unit Writing", "Failed writing to Database");
-                }
-            }
-        });
-    }
-
-     */
 
     public void writePulledUnitToDatabase(Context context, Resources resources, int uid, String game, String banner){
         Retrofit retrofit = new Retrofit.Builder()

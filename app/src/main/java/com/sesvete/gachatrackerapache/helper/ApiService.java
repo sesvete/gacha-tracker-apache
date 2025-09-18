@@ -2,6 +2,9 @@ package com.sesvete.gachatrackerapache.helper;
 
 import com.sesvete.gachatrackerapache.model.CounterInitialization;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
+import com.sesvete.gachatrackerapache.model.PulledUnit;
+
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -56,6 +59,14 @@ public interface ApiService {
             @Field("from_banner") int fromBanner,
             @Field("date") String date
 
+    );
+
+    @FormUrlEncoded
+    @POST("get_history.php")
+    Call<ArrayList<PulledUnit>> getHistoryFromDatabase(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner
     );
 
 }

@@ -1,10 +1,15 @@
 package com.sesvete.gachatrackerapache.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CounterInitialization {
     private int progress;
     private int guaranteed;
+    @SerializedName("num_of_pulls")
     private String numOfPulls;
+    @SerializedName("unit_name")
     private String unitName;
+    @SerializedName("from_banner")
     private String fromBanner;
 
     public CounterInitialization(int progress, int guaranteed, String numOfPulls, String unitName, String fromBanner) {
