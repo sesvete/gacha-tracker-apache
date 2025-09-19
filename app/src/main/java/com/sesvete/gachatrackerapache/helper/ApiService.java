@@ -3,6 +3,7 @@ package com.sesvete.gachatrackerapache.helper;
 import com.sesvete.gachatrackerapache.model.CounterInitialization;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
+import com.sesvete.gachatrackerapache.model.UserStats;
 
 import java.util.ArrayList;
 
@@ -65,6 +66,21 @@ public interface ApiService {
     @POST("get_history.php")
     Call<ArrayList<PulledUnit>> getHistoryFromDatabase(
             @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner
+    );
+
+    @FormUrlEncoded
+    @POST("get_personal_stats.php")
+    Call<UserStats> getPersonalStatsFromDatabase(
+            @Field("uid") int uid,
+            @Field("game") String game,
+            @Field("banner") String banner
+    );
+
+    @FormUrlEncoded
+    @POST("get_global_stats.php")
+    Call<ArrayList<UserStats>> getGlobalStatsFromDatabase(
             @Field("game") String game,
             @Field("banner") String banner
     );
