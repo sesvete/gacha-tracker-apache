@@ -78,4 +78,11 @@ public interface ApiService {
             @Field("banner") String banner
     );
 
+    @FormUrlEncoded
+    @POST("get_global_stats.php")
+    Call<ArrayList<UserStats>> getGlobalStatsFromDatabase(
+            @Field("game") String game,
+            @Field("banner") String banner
+    );
+
 }
