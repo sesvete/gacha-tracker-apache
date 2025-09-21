@@ -71,7 +71,7 @@ public class PulledUnit {
         this.date = date;
     }
 
-    public void writePulledUnitToDatabase(Context context, Resources resources, int uid, String game, String banner){
+    public void writePulledUnitToDatabase(Context context, Resources resources, int uid, String game, String banner, long timerInputPullStart){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -85,6 +85,9 @@ public class PulledUnit {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
                     Log.d("Pulled unit Writing", "Successfully wrote to Database");
+                    long timerInputPullEnd = System.nanoTime();
+                    long timerInputPullResult = (timerInputPullEnd - timerInputPullStart)/1000000;
+                    Log.i("Timer Custom counter update", Long.toString(timerInputPullResult) + " " + "ms");
                     // TODO: also set counter to 0 in same call
                     // oz tle bo update visual counter
                 } else {

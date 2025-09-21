@@ -85,6 +85,7 @@ public class CounterFragment extends Fragment {
     private boolean radioButtonChoice;
     private boolean wonFiftyFifty;
     private int wonFiftyFiftyDatabase;
+    private long timerStartInitialCounterLoad;
 
     public CounterFragment() {
         // Required empty public constructor
@@ -96,8 +97,7 @@ public class CounterFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_counter, container, false);
 
-        // tu so bile spremenljivke o uporabniku
-
+        timerStartInitialCounterLoad = System.nanoTime();
 
         txtCounterProgressNumber = view.findViewById(R.id.txt_counter_progress_number);
         txtCounterHistoryNumber = view.findViewById(R.id.txt_counter_history_number);
@@ -154,19 +154,21 @@ public class CounterFragment extends Fragment {
         btnCounterPlusOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long timerBtnPlusOneStart= System.nanoTime();
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 1, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 1;
-                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
+                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusOneStart);
             }
         });
         btnCounterPlusTen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long timerBtnPlusTenStart= System.nanoTime();
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 10, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 10;
-                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
+                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusTenStart);
             }
         });
         btnCounterPlusX.setOnClickListener(new View.OnClickListener() {
@@ -188,6 +190,7 @@ public class CounterFragment extends Fragment {
                 btnXConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        long timerBtnPlusXStart= System.nanoTime();
                         String inputString = inputXCounter.getText().toString();
                         if (inputString.isEmpty()){
                             Toast.makeText(getContext(), R.string.enter_a_number_error, Toast.LENGTH_SHORT).show();
@@ -200,7 +203,7 @@ public class CounterFragment extends Fragment {
                                     disableButtons();
                                     CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = counterNumber + numCustomWishes;
-                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusXStart);
                                     dialog.dismiss();
                                 }
                             } catch (Exception e) {
@@ -247,6 +250,7 @@ public class CounterFragment extends Fragment {
                         btnConfirmConfirm.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                long timerInputPullStart = System.nanoTime();
                                 String inputString = inputConfirmCounter.getText().toString();
                                 inputString = inputString.toUpperCase();
                                 if (inputString.isEmpty()){
@@ -279,9 +283,9 @@ public class CounterFragment extends Fragment {
                                         imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_block_red);
                                     }
                                     PulledUnit pulledUnit = new PulledUnit(numOfPulls, inputString, wonFiftyFiftyDatabase, formatedDate);
-                                    pulledUnit.writePulledUnitToDatabase(getContext(), getResources(), uid, game, bannerType);
+                                    pulledUnit.writePulledUnitToDatabase(getContext(), getResources(), uid, game, bannerType, timerInputPullStart);
                                     counterNumber = 0;
-                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerInputPullStart);
                                     dialog.dismiss();
                                 }
                             }
@@ -335,6 +339,7 @@ public class CounterFragment extends Fragment {
                 btnConfirmConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        long timerCardStart = System.nanoTime();
                         String inputString = inputUpdateCounter.getText().toString();
                         if (inputString.isEmpty()){
                             Toast.makeText(getContext(), R.string.enter_a_number_error, Toast.LENGTH_SHORT).show();
@@ -357,7 +362,7 @@ public class CounterFragment extends Fragment {
                                     txtCounterProgressNumber.setText(String.valueOf(numCustomWishes));
                                     CounterHelper.updateSoftPityTracker(getResources(), numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = numCustomWishes;
-                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerCardStart);
                                     dialog.dismiss();
 
                                 }
@@ -442,6 +447,9 @@ public class CounterFragment extends Fragment {
                             imgCounterHistoryFeaturedUnitStatus.setImageResource(R.drawable.ic_block_red);
                         }
                     }
+                    long timerEndInitialCounterLoad = System.nanoTime();
+                    long timerInitialCounterResult = (timerEndInitialCounterLoad - timerStartInitialCounterLoad)/1000000;
+                    Log.i("Timer counter initialization", Long.toString(timerInitialCounterResult) + " " + "ms");
                     enableButtons();
 
                 } else {

@@ -2,6 +2,7 @@ package com.sesvete.gachatrackerapache.helper;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DatabaseHelperMariaDB {
 
-    public static void updateDatabaseCounter(Context context, Resources resources, int uid, String game, String banner, int progress, boolean guaranteed, Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen){
+    public static void updateDatabaseCounter(Context context, Resources resources, int uid, String game, String banner, int progress, boolean guaranteed, Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen, long timerBtnPlusOneStart){
 
         int dbGuaranteed = 0;
         if (guaranteed){
@@ -48,6 +49,9 @@ public class DatabaseHelperMariaDB {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
                     enableButtons(btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen);
+                    long timerBtnPlusOneEnd = System.nanoTime();
+                    long timerBtnPlusOneResult = (timerBtnPlusOneEnd - timerBtnPlusOneStart)/1000000;
+                    Log.i("Timer btn +", Long.toString(timerBtnPlusOneResult) + " " + "ms");
                 }
                 else {
                     try {
