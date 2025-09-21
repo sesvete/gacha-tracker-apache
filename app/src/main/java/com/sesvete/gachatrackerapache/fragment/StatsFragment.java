@@ -37,6 +37,9 @@ public class StatsFragment extends Fragment {
     private ArrayList<Statistic> statisticList;
     private StatsRecViewAdapter adapter;
 
+    private long timerPersonalStatsStart;
+    private long timerGlobalStatsStart;
+
 
 
     public StatsFragment() {
@@ -48,6 +51,8 @@ public class StatsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
+
+        timerPersonalStatsStart = System.nanoTime();
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("GachaTrackerPrefs", getContext().MODE_PRIVATE);
         userId = sharedPreferences.getString("uid", null);
@@ -67,21 +72,23 @@ public class StatsFragment extends Fragment {
 
         //initial Load Personal stats
         onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter);
+        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart);
 
         recyclerViewStats.setLayoutManager(new LinearLayoutManager(getContext()));
         btnStatsPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timerPersonalStatsStart = System.nanoTime();
                 onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter);
+                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart);
             }
         });
         btnStatsGlobal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timerGlobalStatsStart = System.nanoTime();
                 onGlobalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                DatabaseHelperMariaDB.getGlobalStats(getContext(), getResources(), statisticList, game, bannerType, adapter);
+                DatabaseHelperMariaDB.getGlobalStats(getContext(), getResources(), statisticList, game, bannerType, adapter, timerGlobalStatsStart);
             }
         });
         return view;

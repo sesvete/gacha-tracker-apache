@@ -74,7 +74,7 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void retrievePullsHistory (Context context, Resources resources, int uid, String game, String banner, HistoryRecViewAdapter adapter, RecyclerView recyclerViewHistory){
+    public static void retrievePullsHistory (Context context, Resources resources, int uid, String game, String banner, HistoryRecViewAdapter adapter, RecyclerView recyclerViewHistory, long timerHistoryStart){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -93,6 +93,9 @@ public class DatabaseHelperMariaDB {
                         recyclerViewHistory.setAdapter(adapter);
                         recyclerViewHistory.setLayoutManager(new LinearLayoutManager(context));
                     }
+                    long timerHistoryEnd = System.nanoTime();
+                    long timerHistoryResult= (timerHistoryEnd - timerHistoryStart)/1000000;
+                    Log.i("Timer history", Long.toString(timerHistoryResult) + " " + "ms");
                 } else {
                     try {
                         Gson gson = new GsonBuilder().create();
@@ -116,7 +119,7 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void getPersonalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, int uid, String game, String bannerType, StatsRecViewAdapter adapter){
+    public static void getPersonalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, int uid, String game, String bannerType, StatsRecViewAdapter adapter, long timerPersonalStatsStart){
         statisticList.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
@@ -158,6 +161,10 @@ public class DatabaseHelperMariaDB {
                     statisticList.add(new Statistic(resources.getString(R.string.avg_currency_five_star), Math.round((doubleAvgNumPulls * currencyValue) * 100.0) / 100.0));
                     statisticList.add(new Statistic(resources.getString(R.string.total_currency_five_star), intTotalNumPulls * currencyValue));
                     adapter.setStatisticList(statisticList);
+
+                    long timerPersonalStatsEnd = System.nanoTime();
+                    long timerPersonalStatsResult= (timerPersonalStatsEnd - timerPersonalStatsStart)/1000000;
+                    Log.i("Timer Personal Stats", Long.toString(timerPersonalStatsResult) + " " + "ms");
                 }
                 else {
                     try {
@@ -177,7 +184,7 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void getGlobalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, String game, String bannerType, StatsRecViewAdapter adapter){
+    public static void getGlobalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, String game, String bannerType, StatsRecViewAdapter adapter, long timerGlobalStatsStart){
         statisticList.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
@@ -247,6 +254,10 @@ public class DatabaseHelperMariaDB {
                         statisticList.add(new Statistic(resources.getString(R.string.total_currency_five_star), roundSumAvgTotalNumPulls * currencyValue));
 
                         adapter.setStatisticList(statisticList);
+
+                        long timerGlobalStatsEnd = System.nanoTime();
+                        long timerGlobalStatsResult= (timerGlobalStatsEnd - timerGlobalStatsStart)/1000000;
+                        Log.i("Timer Global Stats", Long.toString(timerGlobalStatsResult) + " " + "ms");
                     }
 
                 } else {

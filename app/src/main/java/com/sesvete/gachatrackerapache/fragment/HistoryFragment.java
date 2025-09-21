@@ -26,6 +26,7 @@ public class HistoryFragment extends Fragment {
     private String userId;
     private int uid;
     private String game;
+    private long timerHistoryStart;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -35,6 +36,8 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        timerHistoryStart = System.nanoTime();
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("GachaTrackerPrefs", getContext().MODE_PRIVATE);
         userId = sharedPreferences.getString("uid", null);
@@ -52,7 +55,7 @@ public class HistoryFragment extends Fragment {
 
         HistoryRecViewAdapter adapter = new HistoryRecViewAdapter(getContext());
 
-        DatabaseHelperMariaDB.retrievePullsHistory(getContext(), getResources(), uid, game, bannerType, adapter, recyclerViewHistory);
+        DatabaseHelperMariaDB.retrievePullsHistory(getContext(), getResources(), uid, game, bannerType, adapter, recyclerViewHistory, timerHistoryStart);
 
         return view;
     }
