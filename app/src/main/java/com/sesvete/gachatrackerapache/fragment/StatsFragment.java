@@ -41,7 +41,6 @@ public class StatsFragment extends Fragment {
     private long timerGlobalStatsStart;
 
 
-
     public StatsFragment() {
         // Required empty public constructor
     }
@@ -66,42 +65,37 @@ public class StatsFragment extends Fragment {
         txtStatsTitle = view.findViewById(R.id.txt_stats_title);
         recyclerViewStats = view.findViewById(R.id.recycler_view_stats);
 
+        disableButtons();
+
         statisticList = new ArrayList<>();
         adapter = new StatsRecViewAdapter(getContext());
         recyclerViewStats.setAdapter(adapter);
 
         //initial Load Personal stats
-        onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart);
+        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
 
         recyclerViewStats.setLayoutManager(new LinearLayoutManager(getContext()));
         btnStatsPersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableButtons();
                 timerPersonalStatsStart = System.nanoTime();
-                onPersonalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart);
+                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
             }
         });
         btnStatsGlobal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableButtons();
                 timerGlobalStatsStart = System.nanoTime();
-                onGlobalPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
-                DatabaseHelperMariaDB.getGlobalStats(getContext(), getResources(), statisticList, game, bannerType, adapter, timerGlobalStatsStart);
+                DatabaseHelperMariaDB.getGlobalStats(getContext(), getResources(), statisticList, game, bannerType, adapter, timerGlobalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
             }
         });
         return view;
     }
-    private void onPersonalPress(TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
-        txtStatsTitle.setText(R.string.personal_stats);
-        btnStatsPersonal.setEnabled(false);
-        btnStatsGlobal.setEnabled(true);
-    }
 
-    private void onGlobalPress(TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
-        txtStatsTitle.setText(R.string.global_stats);
-        btnStatsPersonal.setEnabled(true);
+    private void disableButtons(){
+        btnStatsPersonal.setEnabled(false);
         btnStatsGlobal.setEnabled(false);
     }
 

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sesvete.gachatrackerapache.R;
@@ -119,7 +121,7 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void getPersonalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, int uid, String game, String bannerType, StatsRecViewAdapter adapter, long timerPersonalStatsStart){
+    public static void getPersonalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, int uid, String game, String bannerType, StatsRecViewAdapter adapter, long timerPersonalStatsStart, TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
         statisticList.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
@@ -165,6 +167,7 @@ public class DatabaseHelperMariaDB {
                     long timerPersonalStatsEnd = System.nanoTime();
                     long timerPersonalStatsResult= (timerPersonalStatsEnd - timerPersonalStatsStart)/1000000;
                     Log.i("Timer Personal Stats", Long.toString(timerPersonalStatsResult) + " " + "ms");
+                    onPersonalStatsPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
                 }
                 else {
                     try {
@@ -184,7 +187,7 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void getGlobalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, String game, String bannerType, StatsRecViewAdapter adapter, long timerGlobalStatsStart){
+    public static void getGlobalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, String game, String bannerType, StatsRecViewAdapter adapter, long timerGlobalStatsStart, TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
         statisticList.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
@@ -258,6 +261,7 @@ public class DatabaseHelperMariaDB {
                         long timerGlobalStatsEnd = System.nanoTime();
                         long timerGlobalStatsResult= (timerGlobalStatsEnd - timerGlobalStatsStart)/1000000;
                         Log.i("Timer Global Stats", Long.toString(timerGlobalStatsResult) + " " + "ms");
+                        onGlobalStatsPress(txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
                     }
 
                 } else {
@@ -290,6 +294,18 @@ public class DatabaseHelperMariaDB {
         btnCounterPlusOne.setEnabled(false);
         btnCounterPlusX.setEnabled(false);
         btnCounterPlusTen.setEnabled(false);
+    }
+
+    public static void onPersonalStatsPress(TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
+        txtStatsTitle.setText(R.string.personal_stats);
+        btnStatsPersonal.setEnabled(false);
+        btnStatsGlobal.setEnabled(true);
+    }
+
+    public static void onGlobalStatsPress(TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
+        txtStatsTitle.setText(R.string.global_stats);
+        btnStatsPersonal.setEnabled(true);
+        btnStatsGlobal.setEnabled(false);
     }
 
 }
