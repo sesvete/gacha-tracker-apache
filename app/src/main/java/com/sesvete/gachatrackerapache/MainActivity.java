@@ -29,14 +29,6 @@ import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 import com.sesvete.gachatrackerapache.helper.SettingsHelper;
 
-/* TODO:
-    1.)odstrani firebase povezavo
-    2.)posodobi logotip
-    3.)postavi strežnik - apache
-    4.)povezava s strežnikom
-
- */
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -116,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             dialog.dismiss();
-                            AuthenticationHelperApache.logoutUser(getResources(), MainActivity.this);
+                            long timerLogoutStart = System.nanoTime();
+                            AuthenticationHelperApache.logoutUser(getResources(), MainActivity.this, timerLogoutStart);
                         }
                     });
                 }

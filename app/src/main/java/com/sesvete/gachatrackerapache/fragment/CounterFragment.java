@@ -148,17 +148,7 @@ public class CounterFragment extends Fragment {
 
         // this is the lunching fragment, so we check here whether the user and the database entry exist
 
-        // pri apache veziji se ne bo rabilo preverit, če uporabnik že obstaja v podatkovni bazi, saj ni potrebna poseban NoSQL struktura
-        // preveri se samo, če je že kak pull z njegovim uid, game in banner in vpisal se bo najnovejši
-
-        // database retrieve newest unit
-        // TODO: poberi relevantne podatke iz podatkovne baze in pol nazaj enablja buttone
-
-        //TODO: tle bo set inital counter
-        // TODO: retrieve newest unit
-
         // retrieves counter data from database
-        // naredi še prej funkcijo, ki preveri, če ima že kakšno enoto v db in poberer najnovejšo - pol šele neablaš buttone
         getDatabaseCounterData(getContext(), getResources(), uid, game, bannerType, txtCounterProgressNumber, imgCounterProgressGuaranteedDescription, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
 
         btnCounterPlusOne.setOnClickListener(new View.OnClickListener() {

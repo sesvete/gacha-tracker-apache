@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AuthenticationHelperApache {
 
-    public static void signupUser(String email, String password, Activity activity, Resources resources, Context context){
+    public static void signupUser(String email, String password, Activity activity, Resources resources, Context context, long timerCreateAccountStart){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
@@ -48,6 +49,10 @@ public class AuthenticationHelperApache {
                     editor.putLong("expiresAt", loginResponse.getExpires_at());
                     editor.apply();
 
+                    long timerCreateAccountEnd = System.nanoTime();
+                    long timerCreateAccountResult = (timerCreateAccountEnd - timerCreateAccountStart)/1000000;
+                    Log.i("Timer Create Email account", Long.toString(timerCreateAccountResult) + " " + "ms");
+
                     Intent intent = new Intent(activity, MainActivity.class);
                     activity.startActivity(intent);
                     activity.finish();
@@ -73,7 +78,7 @@ public class AuthenticationHelperApache {
         });
     }
 
-    public static void loginUser(String email, String password, Activity activity, Resources resources, Context context){
+    public static void loginUser(String email, String password, Activity activity, Resources resources, Context context, long timerSingInEmailStart){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -96,6 +101,10 @@ public class AuthenticationHelperApache {
                     editor.putLong("expiresAt", loginResponse.getExpires_at());
                     editor.apply();
 
+                    long timerSingInEmailEnd = System.nanoTime();
+                    long timerSingInEmailResult = (timerSingInEmailEnd - timerSingInEmailStart)/1000000;
+                    Log.i("Timer sing in Email", Long.toString(timerSingInEmailResult) + " " + "ms");
+
                     Intent intent = new Intent(activity, MainActivity.class);
                     activity.startActivity(intent);
                     activity.finish();
@@ -121,7 +130,7 @@ public class AuthenticationHelperApache {
         });
     }
 
-    public static void logoutUser(Resources resources, Activity activity){
+    public static void logoutUser(Resources resources, Activity activity, long timerLogoutStart){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(resources.getString(R.string.server_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -135,12 +144,18 @@ public class AuthenticationHelperApache {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 // Clear the local session data regardless of server response
                 clearLocalSession(activity);
+                long timerLogoutEnd = System.nanoTime();
+                long timerLogoutResult = (timerLogoutEnd - timerLogoutStart)/1000000;
+                Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Clear the local session data even on network failure
                 clearLocalSession(activity);
+                long timerLogoutEnd = System.nanoTime();
+                long timerLogoutResult = (timerLogoutEnd - timerLogoutStart)/1000000;
+                Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
             }
         });
     }

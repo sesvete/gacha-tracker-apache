@@ -14,12 +14,6 @@ import com.sesvete.gachatrackerapache.helper.AuthenticationHelperApache;
 import com.sesvete.gachatrackerapache.helper.DialogHelper;
 import com.sesvete.gachatrackerapache.helper.LocaleHelper;
 
-//TODO: ob ustvaritvi računa se v podatkovno bazo zapiše uporabnik
-/*
-TODO: in sicer dva zapisa:
-        - tabela user - username in geslo
-        - tabela counter - uid, game name in banner type ter counter se postavi na 0 - to za vsako kombinacijo igra - banner
- */
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -63,11 +57,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                 } else if (password.length() <= 6) {
                     Toast.makeText(CreateAccountActivity.this, getString(R.string.short_password), Toast.LENGTH_SHORT).show();
                 } else {
-                    // TODO: create user - write to database and sing in
-
-                    // za zdaj samo preusmeri na main activity
-
-                    AuthenticationHelperApache.signupUser(email, password, CreateAccountActivity.this, getResources(), getBaseContext());
+                    long timerCreateAccountStart = System.nanoTime();
+                    AuthenticationHelperApache.signupUser(email, password, CreateAccountActivity.this, getResources(), getBaseContext(), timerCreateAccountStart);
 
                 }
 
