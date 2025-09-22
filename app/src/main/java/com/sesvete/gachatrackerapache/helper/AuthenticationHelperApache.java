@@ -142,7 +142,7 @@ public class AuthenticationHelperApache {
         Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
     }
 
-    public static void refreshToken(Context context, Resources resources, Activity activity){
+    public static void refreshToken(Context context, Resources resources, Activity activity, long timerAutoLoginStart){
         Retrofit retrofit = ApiClient.getClient(context, resources);
         ApiService apiService = retrofit.create(ApiService.class);
 
@@ -161,6 +161,7 @@ public class AuthenticationHelperApache {
                     editor.apply();
 
                     Intent intent = new Intent(activity, MainActivity.class);
+                    intent.putExtra("timerStart", timerAutoLoginStart);
                     activity.startActivity(intent);
                     activity.finish();
 

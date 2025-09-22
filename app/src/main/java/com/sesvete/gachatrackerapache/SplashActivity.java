@@ -29,7 +29,8 @@ public class SplashActivity extends AppCompatActivity {
                 long expireTime = sharedPref.getLong("expireTime", 0);
 
                 if (jwtToken != null && System.currentTimeMillis() / 1000 < expireTime) {
-                    AuthenticationHelperApache.refreshToken(getBaseContext(), getResources(), SplashActivity.this);
+                    long timerAutoLoginStart = System.nanoTime();
+                    AuthenticationHelperApache.refreshToken(getBaseContext(), getResources(), SplashActivity.this, timerAutoLoginStart);
                 } else {
                     intent = new Intent(SplashActivity.this, SignInWithPasswordActivity.class);
                     startActivity(intent);
