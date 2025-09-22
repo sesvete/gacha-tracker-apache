@@ -29,9 +29,6 @@ public interface ApiService {
             @Field("password") String password
     );
 
-    @POST("logout.php")
-    Call<ResponseBody> logoutUser();
-
     @FormUrlEncoded
     @POST("update_counter.php")
     Call<ResponseBody> updateDatabaseCounter(
