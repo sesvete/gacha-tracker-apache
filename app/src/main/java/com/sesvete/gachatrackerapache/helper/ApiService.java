@@ -67,7 +67,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("get_personal_stats.php")
     Call<UserStats> getPersonalStatsFromDatabase(
-            @Field("uid") int uid,
             @Field("game") String game,
             @Field("banner") String banner
     );

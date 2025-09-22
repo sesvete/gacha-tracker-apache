@@ -115,15 +115,11 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void getPersonalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, int uid, String game, String bannerType, StatsRecViewAdapter adapter, long timerPersonalStatsStart, TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
+    public static void getPersonalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, String game, String bannerType, StatsRecViewAdapter adapter, long timerPersonalStatsStart, TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
         statisticList.clear();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = ApiClient.getClient(context, resources);
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<UserStats> call = apiService.getPersonalStatsFromDatabase(uid, game, bannerType);
+        Call<UserStats> call = apiService.getPersonalStatsFromDatabase(game, bannerType);
         call.enqueue(new Callback<UserStats>() {
             @Override
             public void onResponse(Call<UserStats> call, Response<UserStats> response) {
@@ -183,10 +179,7 @@ public class DatabaseHelperMariaDB {
 
     public static void getGlobalStats(Context context, Resources resources, ArrayList<Statistic> statisticList, String game, String bannerType, StatsRecViewAdapter adapter, long timerGlobalStatsStart, TextView txtStatsTitle, MaterialButton btnStatsPersonal, MaterialButton btnStatsGlobal){
         statisticList.clear();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = ApiClient.getClient(context, resources);
 
         ApiService apiService = retrofit.create(ApiService.class);
         Call<ArrayList<UserStats>> call = apiService.getGlobalStatsFromDatabase(game, bannerType);

@@ -72,7 +72,7 @@ public class StatsFragment extends Fragment {
         recyclerViewStats.setAdapter(adapter);
 
         //initial Load Personal stats
-        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
+        DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, game, bannerType, adapter, timerPersonalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
 
         recyclerViewStats.setLayoutManager(new LinearLayoutManager(getContext()));
         btnStatsPersonal.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +80,7 @@ public class StatsFragment extends Fragment {
             public void onClick(View v) {
                 disableButtons();
                 timerPersonalStatsStart = System.nanoTime();
-                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, uid, game, bannerType, adapter, timerPersonalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
+                DatabaseHelperMariaDB.getPersonalStats(getContext(), getResources(), statisticList, game, bannerType, adapter, timerPersonalStatsStart, txtStatsTitle, btnStatsPersonal, btnStatsGlobal);
             }
         });
         btnStatsGlobal.setOnClickListener(new View.OnClickListener() {
