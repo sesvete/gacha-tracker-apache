@@ -27,6 +27,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sesvete.gachatrackerapache.R;
+import com.sesvete.gachatrackerapache.helper.ApiClient;
 import com.sesvete.gachatrackerapache.helper.ApiService;
 import com.sesvete.gachatrackerapache.helper.CounterHelper;
 import com.sesvete.gachatrackerapache.helper.DatabaseHelperMariaDB;
@@ -149,7 +150,7 @@ public class CounterFragment extends Fragment {
         // this is the lunching fragment, so we check here whether the user and the database entry exist
 
         // retrieves counter data from database
-        getDatabaseCounterData(getContext(), getResources(), uid, game, bannerType, txtCounterProgressNumber, imgCounterProgressGuaranteedDescription, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
+        getDatabaseCounterData(getContext(), getResources(), game, bannerType, txtCounterProgressNumber, imgCounterProgressGuaranteedDescription, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotTotal, softPity, wishValue, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotalDescription);
 
         btnCounterPlusOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +159,7 @@ public class CounterFragment extends Fragment {
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 1, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 1;
-                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusOneStart);
+                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusOneStart);
             }
         });
         btnCounterPlusTen.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +169,7 @@ public class CounterFragment extends Fragment {
                 disableButtons();
                 CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, 10, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                 counterNumber = counterNumber + 10;
-                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusTenStart);
+                DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusTenStart);
             }
         });
         btnCounterPlusX.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +204,7 @@ public class CounterFragment extends Fragment {
                                     disableButtons();
                                     CounterHelper.updateCounter(getResources(), txtCounterProgressNumber, numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = counterNumber + numCustomWishes;
-                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusXStart);
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerBtnPlusXStart);
                                     dialog.dismiss();
                                 }
                             } catch (Exception e) {
@@ -285,7 +286,7 @@ public class CounterFragment extends Fragment {
                                     PulledUnit pulledUnit = new PulledUnit(numOfPulls, inputString, wonFiftyFiftyDatabase, formatedDate);
                                     pulledUnit.writePulledUnitToDatabase(getContext(), getResources(), uid, game, bannerType, timerInputPullStart);
                                     counterNumber = 0;
-                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerInputPullStart);
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerInputPullStart);
                                     dialog.dismiss();
                                 }
                             }
@@ -362,7 +363,7 @@ public class CounterFragment extends Fragment {
                                     txtCounterProgressNumber.setText(String.valueOf(numCustomWishes));
                                     CounterHelper.updateSoftPityTracker(getResources(), numCustomWishes, softPity, wishValue, currencyType, txtCounterSpentTillJackpot, txtCounterSpentTillJackpotDescription, txtCounterSpentTillJackpotCurrency, txtCounterSpentTillJackpotCurrencyDescription, txtCounterSpentTillJackpotTotal, txtCounterSpentTillJackpotTotalDescription);
                                     counterNumber = numCustomWishes;
-                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), uid, game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerCardStart);
+                                    DatabaseHelperMariaDB.updateDatabaseCounter(getContext(), getResources(), game, bannerType, counterNumber, guaranteed, btnCounterConfirm, btnCounterPlusOne, btnCounterPlusX, btnCounterPlusTen, timerCardStart);
                                     dialog.dismiss();
 
                                 }
@@ -409,14 +410,11 @@ public class CounterFragment extends Fragment {
     // morajo se posodobiti tista polja
 
 
-    private void getDatabaseCounterData(Context context, Resources resources, int uid, String game, String banner, TextView txtCounterProgressNumber, ImageView imgCounterProgressGuaranteedDescription, TextView txtCounterSpentTillJackpot, TextView txtCounterSpentTillJackpotCurrency, TextView txtCounterSpentTillJackpotTotal, int softPity, int wishValue, TextView txtCounterSpentTillJackpotCurrencyDescription, TextView txtCounterSpentTillJackpotTotalDescription) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    private void getDatabaseCounterData(Context context, Resources resources, String game, String banner, TextView txtCounterProgressNumber, ImageView imgCounterProgressGuaranteedDescription, TextView txtCounterSpentTillJackpot, TextView txtCounterSpentTillJackpotCurrency, TextView txtCounterSpentTillJackpotTotal, int softPity, int wishValue, TextView txtCounterSpentTillJackpotCurrencyDescription, TextView txtCounterSpentTillJackpotTotalDescription) {
+        Retrofit retrofit = ApiClient.getClient(context, resources);
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<CounterInitialization> call = apiService.getDatabaseCounterData(uid, game, banner);
+        Call<CounterInitialization> call = apiService.getDatabaseCounterData(game, banner);
 
         call.enqueue(new Callback<CounterInitialization>() {
             @Override

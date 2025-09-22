@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DatabaseHelperMariaDB {
 
-    public static void updateDatabaseCounter(Context context, Resources resources, int uid, String game, String banner, int progress, boolean guaranteed, Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen, long timerBtnPlusOneStart){
+    public static void updateDatabaseCounter(Context context, Resources resources, String game, String banner, int progress, boolean guaranteed, Button btnCounterConfirm, Button btnCounterPlusOne, Button btnCounterPlusX, Button btnCounterPlusTen, long timerBtnPlusOneStart){
 
         int dbGuaranteed = 0;
         if (guaranteed){
@@ -38,14 +38,11 @@ public class DatabaseHelperMariaDB {
             dbGuaranteed = 0;
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = ApiClient.getClient(context, resources);
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.updateDatabaseCounter(uid, game, banner, progress, dbGuaranteed);
+        Call<ResponseBody> call = apiService.updateDatabaseCounter(game, banner, progress, dbGuaranteed);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

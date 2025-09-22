@@ -34,7 +34,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("update_counter.php")
     Call<ResponseBody> updateDatabaseCounter(
-            @Field("uid") int uid,
             @Field("game") String game,
             @Field("banner") String banner,
             @Field("progress") int progress,
@@ -44,7 +43,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("get_counter_data.php")
     Call<CounterInitialization> getDatabaseCounterData(
-            @Field("uid") int uid,
             @Field("game") String game,
             @Field("banner") String banner
     );

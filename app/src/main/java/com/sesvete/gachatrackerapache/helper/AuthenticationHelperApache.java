@@ -16,7 +16,6 @@ import com.sesvete.gachatrackerapache.SignInWithPasswordActivity;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
 import com.sesvete.gachatrackerapache.model.ResponseError;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +45,7 @@ public class AuthenticationHelperApache {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("uid", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
-                    editor.putLong("expiresAt", loginResponse.getExpires_at());
+                    editor.putString("token", loginResponse.getToken());
                     editor.apply();
 
                     long timerCreateAccountEnd = System.nanoTime();
@@ -98,7 +97,7 @@ public class AuthenticationHelperApache {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("uid", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
-                    editor.putLong("expiresAt", loginResponse.getExpires_at());
+                    editor.putString("token", loginResponse.getToken());
                     editor.apply();
 
                     long timerSingInEmailEnd = System.nanoTime();
@@ -131,33 +130,13 @@ public class AuthenticationHelperApache {
     }
 
     public static void logoutUser(Resources resources, Activity activity, long timerLogoutStart){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        Call<ResponseBody> call = apiService.logoutUser();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                // Clear the local session data regardless of server response
-                clearLocalSession(activity);
-                long timerLogoutEnd = System.nanoTime();
-                long timerLogoutResult = (timerLogoutEnd - timerLogoutStart)/1000000;
-                Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Clear the local session data even on network failure
-                clearLocalSession(activity);
-                long timerLogoutEnd = System.nanoTime();
-                long timerLogoutResult = (timerLogoutEnd - timerLogoutStart)/1000000;
-                Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
-            }
-        });
+        timerLogoutStart = System.nanoTime();
+        // The server doesn't need to do anything to log a user out since tokens are stateless.
+        // Simply clear the token from the app's local storage.
+        clearLocalSession(activity);
+        long timerLogoutEnd = System.nanoTime();
+        long timerLogoutResult = (timerLogoutEnd - timerLogoutStart)/1000000;
+        Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
     }
 
     private static void clearLocalSession(Activity activity){
