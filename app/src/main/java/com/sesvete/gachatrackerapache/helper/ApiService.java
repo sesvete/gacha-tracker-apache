@@ -60,7 +60,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("get_history.php")
     Call<ArrayList<PulledUnit>> getHistoryFromDatabase(
-            @Field("uid") int uid,
             @Field("game") String game,
             @Field("banner") String banner
     );

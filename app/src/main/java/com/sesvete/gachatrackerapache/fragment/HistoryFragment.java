@@ -55,7 +55,7 @@ public class HistoryFragment extends Fragment {
 
         HistoryRecViewAdapter adapter = new HistoryRecViewAdapter(getContext());
 
-        DatabaseHelperMariaDB.retrievePullsHistory(getContext(), getResources(), uid, game, bannerType, adapter, recyclerViewHistory, timerHistoryStart);
+        DatabaseHelperMariaDB.retrievePullsHistory(getContext(), getResources(), game, bannerType, adapter, recyclerViewHistory, timerHistoryStart);
 
         return view;
     }

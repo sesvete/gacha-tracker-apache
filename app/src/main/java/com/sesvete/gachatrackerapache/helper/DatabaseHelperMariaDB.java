@@ -73,14 +73,11 @@ public class DatabaseHelperMariaDB {
         });
     }
 
-    public static void retrievePullsHistory (Context context, Resources resources, int uid, String game, String banner, HistoryRecViewAdapter adapter, RecyclerView recyclerViewHistory, long timerHistoryStart){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public static void retrievePullsHistory (Context context, Resources resources, String game, String banner, HistoryRecViewAdapter adapter, RecyclerView recyclerViewHistory, long timerHistoryStart){
+        Retrofit retrofit = ApiClient.getClient(context, resources);
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<ArrayList<PulledUnit>> call = apiService.getHistoryFromDatabase(uid, game, banner);
+        Call<ArrayList<PulledUnit>> call = apiService.getHistoryFromDatabase(game, banner);
         call.enqueue(new Callback<ArrayList<PulledUnit>>() {
             @Override
             public void onResponse(Call<ArrayList<PulledUnit>> call, Response<ArrayList<PulledUnit>> response) {
