@@ -132,8 +132,8 @@ public class AuthenticationHelperApache {
         });
     }
 
-    public static void logoutUser(Resources resources, Activity activity, long timerLogoutStart){
-        timerLogoutStart = System.nanoTime();
+    public static void logoutUser(Resources resources, Activity activity){
+        long timerLogoutStart = System.nanoTime();
         // The server doesn't need to do anything to log a user out since tokens are stateless.
         // Simply clear the token from the app's local storage.
         clearLocalSession(activity);

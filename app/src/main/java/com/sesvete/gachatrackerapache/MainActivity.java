@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             dialog.dismiss();
                             long timerLogoutStart = System.nanoTime();
-                            AuthenticationHelperApache.logoutUser(getResources(), MainActivity.this, timerLogoutStart);
+                            AuthenticationHelperApache.logoutUser(getResources(), MainActivity.this);
                         }
                     });
                 }
