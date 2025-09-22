@@ -7,6 +7,8 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.sesvete.gachatrackerapache.helper.AuthenticationHelperApache;
+
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -23,14 +25,11 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 // Check for an existing, unexpired session
                 SharedPreferences sharedPref = getSharedPreferences("GachaTrackerPrefs", getBaseContext().MODE_PRIVATE);
-                String uid = sharedPref.getString("uid", null);
-                long expiresAt = sharedPref.getLong("expiresAt", 0);
+                String jwtToken = sharedPref.getString("token", null);
+                long expireTime = sharedPref.getLong("expireTime", 0);
 
-                if (uid != null && System.currentTimeMillis() / 1000 < expiresAt) {
-                    // Session is valid, navigate to main activity
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                if (jwtToken != null && System.currentTimeMillis() / 1000 < expireTime) {
+                    AuthenticationHelperApache.refreshToken(getBaseContext(), getResources(), SplashActivity.this);
                 } else {
                     intent = new Intent(SplashActivity.this, SignInWithPasswordActivity.class);
                     startActivity(intent);

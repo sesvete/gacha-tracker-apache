@@ -14,6 +14,7 @@ import com.sesvete.gachatrackerapache.MainActivity;
 import com.sesvete.gachatrackerapache.R;
 import com.sesvete.gachatrackerapache.SignInWithPasswordActivity;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
+import com.sesvete.gachatrackerapache.model.RefreshTokenResponse;
 import com.sesvete.gachatrackerapache.model.ResponseError;
 
 import retrofit2.Call;
@@ -45,6 +46,7 @@ public class AuthenticationHelperApache {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("uid", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
+                    editor.putLong("expireTime", loginResponse.getExpireTime());
                     editor.putString("token", loginResponse.getToken());
                     editor.apply();
 
@@ -97,6 +99,7 @@ public class AuthenticationHelperApache {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("uid", loginResponse.getUid());
                     editor.putString("username", loginResponse.getUsername());
+                    editor.putLong("expireTime", loginResponse.getExpireTime());
                     editor.putString("token", loginResponse.getToken());
                     editor.apply();
 
@@ -137,6 +140,48 @@ public class AuthenticationHelperApache {
         long timerLogoutEnd = System.nanoTime();
         long timerLogoutResult = (timerLogoutEnd - timerLogoutStart)/1000000;
         Log.i("Timer Logout", Long.toString(timerLogoutResult) + " " + "ms");
+    }
+
+    public static void refreshToken(Context context, Resources resources, Activity activity){
+        Retrofit retrofit = ApiClient.getClient(context, resources);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<RefreshTokenResponse> call = apiService.refreshToken();
+        call.enqueue(new Callback<RefreshTokenResponse>() {
+            @Override
+            public void onResponse(Call<RefreshTokenResponse> call, Response<RefreshTokenResponse> response) {
+                if (response.isSuccessful()){
+                    RefreshTokenResponse refreshTokenResponse = response.body();
+
+                    // Save session state to SharedPreferences
+                    SharedPreferences sharedPref = activity.getSharedPreferences("GachaTrackerPrefs", context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putLong("expireTime", refreshTokenResponse.getExpireTime());
+                    editor.putString("token", refreshTokenResponse.getToken());
+                    editor.apply();
+
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    activity.startActivity(intent);
+                    activity.finish();
+
+                } else {
+                    Intent intent = new Intent(activity, SignInWithPasswordActivity.class);
+                    activity.startActivity(intent);
+                    activity.finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RefreshTokenResponse> call, Throwable t) {
+                Toast.makeText(activity, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(activity, SignInWithPasswordActivity.class);
+                activity.startActivity(intent);
+                activity.finish();
+            }
+        });
+
+
+
     }
 
     private static void clearLocalSession(Activity activity){

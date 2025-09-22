@@ -3,6 +3,7 @@ package com.sesvete.gachatrackerapache.helper;
 import com.sesvete.gachatrackerapache.model.CounterInitialization;
 import com.sesvete.gachatrackerapache.model.LoginResponse;
 import com.sesvete.gachatrackerapache.model.PulledUnit;
+import com.sesvete.gachatrackerapache.model.RefreshTokenResponse;
 import com.sesvete.gachatrackerapache.model.UserStats;
 
 import java.util.ArrayList;
@@ -82,5 +83,8 @@ public interface ApiService {
             @Field("game") String game,
             @Field("banner") String banner
     );
+
+    @POST("refresh_token.php")
+    Call<RefreshTokenResponse> refreshToken();
 
 }
