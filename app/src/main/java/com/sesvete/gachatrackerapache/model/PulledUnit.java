@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.sesvete.gachatrackerapache.R;
+import com.sesvete.gachatrackerapache.helper.ApiClient;
 import com.sesvete.gachatrackerapache.helper.ApiService;
 
 import okhttp3.ResponseBody;
@@ -16,7 +16,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PulledUnit {
@@ -71,15 +70,12 @@ public class PulledUnit {
         this.date = date;
     }
 
-    public void writePulledUnitToDatabase(Context context, Resources resources, int uid, String game, String banner, long timerInputPullStart){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(resources.getString(R.string.server_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public void writePulledUnitToDatabase(Context context, Resources resources, String game, String banner, long timerInputPullStart){
+        Retrofit retrofit = ApiClient.getClient(context, resources);
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.insertPulledUnitToDatabase(uid, game, banner, getUnitName(), getNumOfPulls(), getFromBanner(), getDate());
+        Call<ResponseBody> call = apiService.insertPulledUnitToDatabase(game, banner, getUnitName(), getNumOfPulls(), getFromBanner(), getDate());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
