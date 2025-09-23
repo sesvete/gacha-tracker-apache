@@ -14,6 +14,7 @@ Minimum supported Android version is Android 8
 - History of Pulls
 - Statistics: both for the individual user and global averages across all users
 - App uses custom backend server solution
+- App uses the <a href="https://github.com/square/retrofit">Retrofit</a> Http client
 
 ## Technology Stack
 - Frontend: Android Studio(Java)
