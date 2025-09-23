@@ -22,9 +22,9 @@ Minimum supported Android version is Android 8
 ## Project Setup
 - Create a credentials.xml file in app/src/main/res/values/credentials.xml
 - Create server_url resource in credentials.xml that contains your server url
-- Setup the <a href="https://github.com/sesvete/gacha-app-apache-server" title="server">server</a>
+- Setup the <a href="https://github.com/sesvete/gacha-app-apache-server"">server</a>
 
 ## Download
-Head to the <a href="https://github.com/sesvete/gacha-tracker-apache/releases" title="Releases">releases</a> page for the newest release
+Head to the <a href="https://github.com/sesvete/gacha-tracker-apache/releases">releases</a> page for the newest release
 
 Permission to install unknown apps is required for the installation of the app
